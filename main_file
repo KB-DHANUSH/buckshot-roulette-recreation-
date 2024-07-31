@@ -1,0 +1,83 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
+
+public class NEWROLLET {
+    int rounds[]=new int[10];
+    Random rand=new Random();
+    JLabel label;
+    int current=0;
+
+    NEWROLLET()
+    {
+        //frame creation
+        JFrame frame=new JFrame("buch0rollet");
+        frame.setLayout(new BorderLayout());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setBounds(450,250,300,200);
+
+        //label to show the text
+        label=new JLabel("shoot ur self or shoot the other person",JLabel.CENTER);
+
+        //creating the rounds for gun
+        for(int i=0;i<10;i++)
+        {
+            rounds[i]=rand.nextInt(2);
+        }
+
+        //creating self shoot and shoot other person button
+        JButton self=new JButton("self-shoot");
+        JButton other=new JButton("shoot-other");
+
+        //adding actionlistener to the buttons
+        self.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                shoot(false);
+            }
+        });
+        other.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                shoot(true);
+            }
+        });
+
+        //button panel
+        JPanel button_panel=new JPanel();
+        button_panel.setLayout(new GridLayout(1,2));
+        button_panel.add(self);
+        button_panel.add(other);
+        //adding it into the frame
+        frame.add(label,BorderLayout.CENTER);
+        frame.add(button_panel,BorderLayout.SOUTH);
+
+        //visibility of frame
+        frame.setVisible(true);
+    }
+    public void shoot(Boolean i)
+    {
+        if (rounds[current]==1)
+        {
+            if (i) {
+                label.setText("you shot ur self");
+            }
+            else{
+                label.setText("you shot the other person");
+            }
+        }
+
+    }
+    public static void main(String [] args)
+    {
+        SwingUtilities.invokeLater(new Runnable()
+        {
+            public void run()
+            {
+                new NEWROLLET();
+            }
+        });
+    }
+}
