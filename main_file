@@ -161,6 +161,7 @@ public class NEWROLLET {
         }
 
         boolean isBlank = rounds[current] == 0;
+        boolean isSelfShoot = !isShootingOther;
 
         if (isShootingOther) {
             // Shooting the other player
@@ -186,14 +187,19 @@ public class NEWROLLET {
                     p2_life--;
                 }
 
-                // If it was a blank, do not switch turns
+                // If it was a blank, give the player another chance
                 if (isBlank) {
-                    // Allow the player another chance, no turn switch
+                    lives_count.setText("Lives left - Player 1: " + p1_life + " Player 2: " + p2_life);
+                    rounds_count.setText("No of Shoots Left: " + total_rounds);
+                    // Do not switch turns
                     return;
                 }
             } else {
                 statusLabel.setText("You are safe; it was empty.");
             }
+
+            // Switch turns after a non-blank self-shot
+            isP1Turn = !isP1Turn;
         }
 
         // Update lives and rounds information
@@ -218,11 +224,7 @@ public class NEWROLLET {
         } else {
             // Increment current and wrap around if necessary
             current = (current + 1) % rounds.length;
-            // Switch turns if it was not a blank self-shot
-            if (!isBlank || isShootingOther) {
-                isP1Turn = !isP1Turn;
-                turnLabel.setText((isP1Turn ? "Player 1's Turn" : "Player 2's Turn"));
-            }
+            turnLabel.setText((isP1Turn ? "Player 1's Turn" : "Player 2's Turn"));
         }
     }
 
