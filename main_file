@@ -15,24 +15,28 @@ public class NEWROLLET {
     int p2_wins;
     JLabel turnLabel;
     JLabel statusLabel;
-    JLabel lives_count;
-    JLabel rounds_count;
-    JLabel wins_count;
-    JButton self;
-    JButton other;
-    JButton restart;
+    JLabel livesCountLabel;
+    JLabel roundsCountLabel;
+    JLabel winsCountLabel;
+    JButton selfShootButton;
+    JButton shootOtherButton;
+    JButton restartButton;
     Font customFont;
+    Font headingFont;
     boolean isP1Turn;
 
     NEWROLLET() {
-        // Use built-in font
-        customFont = new Font("Monospaced", Font.BOLD, 14);
+        // Custom fonts
+        customFont = new Font("Arial", Font.BOLD, 16);
+        headingFont = new Font("Arial", Font.BOLD, 20);
 
         // Frame creation
         JFrame frame = new JFrame("Buckshot Roulette");
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setBounds(450, 250, 400, 350); // Increased height to accommodate the wins label
+        frame.setBounds(450, 250, 500, 400);
+
+        // Set background color to black
         frame.getContentPane().setBackground(Color.BLACK);
 
         // Create and initialize the rounds for gun
@@ -45,40 +49,38 @@ public class NEWROLLET {
         p1_wins = 0;
         p2_wins = 0;
 
-        // Creating self shoot and shoot other person buttons
-        self = new JButton("Self-Shoot");
-        other = new JButton("Shoot-Other");
-        restart = new JButton("RESTART");
+        // Creating buttons
+        selfShootButton = new JButton("Self-Shoot");
+        shootOtherButton = new JButton("Shoot Other");
+        restartButton = new JButton("Restart");
 
-        // Apply built-in font to buttons
-        self.setFont(customFont);
-        other.setFont(customFont);
-        restart.setFont(customFont);
+        // Apply custom font and colors to buttons
+        selfShootButton.setFont(customFont);
+        shootOtherButton.setFont(customFont);
+        restartButton.setFont(customFont);
 
-        // Add color to buttons
-        self.setBackground(Color.RED);
-        other.setBackground(Color.RED);
-        restart.setBackground(Color.RED);
+        selfShootButton.setBackground(new Color(255, 69, 58)); // Red
+        shootOtherButton.setBackground(new Color(255, 69, 58)); // Red
+        restartButton.setBackground(new Color(0, 204, 102)); // Green
 
-        // Add text color to buttons
-        self.setForeground(Color.WHITE);
-        other.setForeground(Color.WHITE);
-        restart.setForeground(Color.WHITE);
+        selfShootButton.setForeground(Color.WHITE);
+        shootOtherButton.setForeground(Color.WHITE);
+        restartButton.setForeground(Color.WHITE);
 
         // Adding action listeners to the buttons
-        self.addActionListener(new ActionListener() {
+        selfShootButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 shoot(false);
             }
         });
-        other.addActionListener(new ActionListener() {
+        shootOtherButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 shoot(true);
             }
         });
-        restart.addActionListener(new ActionListener() {
+        restartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 restart();
@@ -88,11 +90,11 @@ public class NEWROLLET {
         // Middle panel for displaying game status and action options
         JPanel middlePanel = new JPanel();
         middlePanel.setLayout(new GridLayout(3, 1));
-        middlePanel.setBackground(Color.BLACK);
+        middlePanel.setOpaque(false);
 
         // Label to show which player's turn it is
         turnLabel = new JLabel("Player 1's Turn", JLabel.CENTER);
-        turnLabel.setFont(customFont);
+        turnLabel.setFont(headingFont);
         turnLabel.setForeground(Color.WHITE);
 
         // Label to show the action options
@@ -113,28 +115,29 @@ public class NEWROLLET {
         // Button panel
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1, 3));
-        buttonPanel.add(self);
-        buttonPanel.add(other);
-        buttonPanel.add(restart);
+        buttonPanel.setOpaque(false);
+        buttonPanel.add(selfShootButton);
+        buttonPanel.add(shootOtherButton);
+        buttonPanel.add(restartButton);
 
-        // Create and apply built-in font to lives, count, and wins labels
-        lives_count = new JLabel("Lives left - Player 1: " + p1_life + " Player 2: " + p2_life, JLabel.CENTER);
-        rounds_count = new JLabel("No of Shoots Left: " + total_rounds, JLabel.CENTER);
-        wins_count = new JLabel("Wins - Player 1: " + p1_wins + " Player 2: " + p2_wins, JLabel.CENTER);
-        lives_count.setFont(customFont);
-        lives_count.setForeground(Color.WHITE);
-        rounds_count.setFont(customFont);
-        rounds_count.setForeground(Color.WHITE);
-        wins_count.setFont(customFont);
-        wins_count.setForeground(Color.WHITE);
+        // Create and apply custom font to lives, count, and wins labels
+        livesCountLabel = new JLabel("Lives Left - Player 1: " + p1_life + " | Player 2: " + p2_life, JLabel.CENTER);
+        roundsCountLabel = new JLabel("Shoots Left: " + total_rounds, JLabel.CENTER);
+        winsCountLabel = new JLabel("Wins - Player 1: " + p1_wins + " | Player 2: " + p2_wins, JLabel.CENTER);
+        livesCountLabel.setFont(customFont);
+        livesCountLabel.setForeground(Color.WHITE);
+        roundsCountLabel.setFont(customFont);
+        roundsCountLabel.setForeground(Color.WHITE);
+        winsCountLabel.setFont(customFont);
+        winsCountLabel.setForeground(Color.WHITE);
 
         // Lives panel
         JPanel livesPanel = new JPanel();
         livesPanel.setLayout(new GridLayout(3, 1));
-        livesPanel.setBackground(Color.BLACK);
-        livesPanel.add(wins_count);
-        livesPanel.add(lives_count);
-        livesPanel.add(rounds_count);
+        livesPanel.setOpaque(false);
+        livesPanel.add(winsCountLabel);
+        livesPanel.add(livesCountLabel);
+        livesPanel.add(roundsCountLabel);
 
         // Adding components to the frame
         frame.add(livesPanel, BorderLayout.NORTH);
@@ -186,14 +189,6 @@ public class NEWROLLET {
                 } else {
                     p2_life--;
                 }
-
-                // If it was a blank, give the player another chance
-                if (isBlank) {
-                    lives_count.setText("Lives left - Player 1: " + p1_life + " Player 2: " + p2_life);
-                    rounds_count.setText("No of Shoots Left: " + total_rounds);
-                    // Do not switch turns
-                    return;
-                }
             } else {
                 statusLabel.setText("You are safe; it was empty.");
             }
@@ -204,19 +199,19 @@ public class NEWROLLET {
 
         // Update lives and rounds information
         total_rounds--;
-        lives_count.setText("Lives left - Player 1: " + p1_life + " Player 2: " + p2_life);
-        rounds_count.setText("No of Shoots Left: " + total_rounds);
+        livesCountLabel.setText("Lives Left - Player 1: " + p1_life + " | Player 2: " + p2_life);
+        roundsCountLabel.setText("Shoots Left: " + total_rounds);
 
         // Check for game over conditions
         if (p1_life <= 0) {
             statusLabel.setText("Game Over! Player 2 Wins!");
-            p2_wins++; // Increment Player 2's win count
-            wins_count.setText("Wins - Player 1: " + p1_wins + " Player 2: " + p2_wins); // Update win count display
+            p2_wins++;
+            winsCountLabel.setText("Wins - Player 1: " + p1_wins + " | Player 2: " + p2_wins);
             disableGameButtons();
         } else if (p2_life <= 0) {
             statusLabel.setText("Game Over! Player 1 Wins!");
-            p1_wins++; // Increment Player 1's win count
-            wins_count.setText("Wins - Player 1: " + p1_wins + " Player 2: " + p2_wins); // Update win count display
+            p1_wins++;
+            winsCountLabel.setText("Wins - Player 1: " + p1_wins + " | Player 2: " + p2_wins);
             disableGameButtons();
         } else if (total_rounds <= 0) {
             statusLabel.setText("Game Over! No more rounds left.");
@@ -226,36 +221,108 @@ public class NEWROLLET {
             current = (current + 1) % rounds.length;
             turnLabel.setText((isP1Turn ? "Player 1's Turn" : "Player 2's Turn"));
         }
+
+        // Trigger screen flash and glitch effect if not a blank
+        if (!isBlank) {
+            triggerFlashAndGlitch();
+        }
     }
 
-    public void restart() {
+    private void triggerFlashAndGlitch() {
+        final JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(turnLabel);
+
+        // Duration for the flash effect
+        final int flashDuration = 200; // milliseconds
+        final int flashInterval = 50; // milliseconds
+
+        // Flash screen white
+        Timer flashTimer = new Timer(flashInterval, new ActionListener() {
+            private boolean white = false;
+            private int elapsedTime = 0;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (elapsedTime >= flashDuration) {
+                    ((Timer) e.getSource()).stop();
+                    frame.getContentPane().setBackground(Color.BLACK); // Reset to black after flashing
+                    return;
+                }
+                if (white) {
+                    frame.getContentPane().setBackground(Color.WHITE);
+                } else {
+                    frame.getContentPane().setBackground(Color.BLACK);
+                }
+                white = !white;
+                elapsedTime += flashInterval;
+            }
+        });
+        flashTimer.setRepeats(true);
+        flashTimer.start();
+
+        // Shake text labels with glitch effect
+        final int shakeAmount = 20; // Increased shake amount
+        final int shakeDuration = 500; // milliseconds
+        final int interval = 10; // milliseconds
+
+        Timer shakeTimer = new Timer(interval, new ActionListener() {
+            int elapsed = 0;
+            boolean movingRight = true;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (elapsed >= shakeDuration) {
+                    ((Timer) e.getSource()).stop();
+                    // Reset all text positions
+                    statusLabel.setLocation(statusLabel.getX(), statusLabel.getY());
+                    turnLabel.setLocation(turnLabel.getX(), turnLabel.getY());
+                    livesCountLabel.setLocation(livesCountLabel.getX(), livesCountLabel.getY());
+                    roundsCountLabel.setLocation(roundsCountLabel.getX(), roundsCountLabel.getY());
+                    winsCountLabel.setLocation(winsCountLabel.getX(), winsCountLabel.getY());
+                    return;
+                }
+
+                int shakeOffset = movingRight ? shakeAmount : -shakeAmount;
+                statusLabel.setLocation(statusLabel.getX() + shakeOffset, statusLabel.getY());
+                turnLabel.setLocation(turnLabel.getX() + shakeOffset, turnLabel.getY());
+                livesCountLabel.setLocation(livesCountLabel.getX() + shakeOffset, livesCountLabel.getY());
+                roundsCountLabel.setLocation(roundsCountLabel.getX() + shakeOffset, roundsCountLabel.getY());
+                winsCountLabel.setLocation(winsCountLabel.getX() + shakeOffset, winsCountLabel.getY());
+                movingRight = !movingRight;
+                elapsed += interval;
+            }
+        });
+        shakeTimer.start();
+    }
+
+    private void restart() {
         p1_life = 3;
         p2_life = 3;
         total_rounds = 10;
-        generateRounds(); // Re-generate rounds for a new game
-        lives_count.setText("Lives left - Player 1: " + p1_life + " Player 2: " + p2_life);
-        rounds_count.setText("No of Shoots Left: " + total_rounds);
-        turnLabel.setText("Player 1's Turn"); // Reset game status text
-        statusLabel.setText("Shoot yourself or the other person"); // Reset status text
-        enableGameButtons(); // Re-enable buttons if they were disabled
-        isP1Turn = true; // Reset to Player 1's turn
+        p1_wins = 0;
+        p2_wins = 0;
+        current = 0;
+        isP1Turn = true;
+
+        livesCountLabel.setText("Lives Left - Player 1: " + p1_life + " | Player 2: " + p2_life);
+        roundsCountLabel.setText("Shoots Left: " + total_rounds);
+        winsCountLabel.setText("Wins - Player 1: " + p1_wins + " | Player 2: " + p2_wins);
+        statusLabel.setText("");
+        turnLabel.setText("Player 1's Turn");
+
+        enableGameButtons();
     }
 
     private void disableGameButtons() {
-        self.setEnabled(false);
-        other.setEnabled(false);
+        selfShootButton.setEnabled(false);
+        shootOtherButton.setEnabled(false);
     }
 
     private void enableGameButtons() {
-        self.setEnabled(true);
-        other.setEnabled(true);
+        selfShootButton.setEnabled(true);
+        shootOtherButton.setEnabled(true);
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new NEWROLLET();
-            }
-        });
+        SwingUtilities.invokeLater(() -> new NEWROLLET());
     }
 }
